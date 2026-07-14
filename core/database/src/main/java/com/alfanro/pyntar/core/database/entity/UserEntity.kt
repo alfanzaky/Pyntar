@@ -8,8 +8,9 @@ import java.util.UUID
 data class UserEntity(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val name: String,
+    val username: String,
     val email: String,
+    val passwordHash: String,
     val avatarUrl: String? = null,
     val joinedAt: Long = System.currentTimeMillis()
 )

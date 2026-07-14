@@ -62,9 +62,8 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun PyntarTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    // True by default to respect user's system choices (as requested in plan)
-    dynamicColor: Boolean = true,
+    // Dynamic color is available on Android 12+, but we disable it by default to enforce our premium brand palette
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
