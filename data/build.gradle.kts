@@ -28,4 +28,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    // Core modules
+    implementation(project(":core:database"))
+    implementation(project(":core:common"))
+    implementation(project(":core:datastore"))
+    implementation(project(":domain"))
 }

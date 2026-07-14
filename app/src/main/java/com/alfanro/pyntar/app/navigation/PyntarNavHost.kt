@@ -10,39 +10,80 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.alfanro.pyntar.feature.auth.screen.LoginScreen
+import com.alfanro.pyntar.feature.auth.screen.RegisterScreen
+import com.alfanro.pyntar.feature.auth.screen.SplashScreen
 
 @Composable
 fun PyntarNavHost(
     navController: NavHostController,
-    startDestination: String = Screen.Dashboard.route
+    startDestination: String = Screen.Splash.route
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
+        // ── Auth Flow ────────────────────────────────────────────────
+        composable(Screen.Splash.route) {
+            SplashScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+                onNavigateToDashboard = {
+                    navController.navigate(Screen.Dashboard.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onNavigateToRegister = {
+                    navController.navigate(Screen.Register.route)
+                },
+                onLoginSuccess = {
+                    navController.navigate(Screen.Dashboard.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                },
+                onRegisterSuccess = {
+                    navController.navigate(Screen.Dashboard.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // ── Main App ────────────────────────────────────────────────
         composable(Screen.Dashboard.route) {
-            PlaceholderScreen(title = "Dashboard Screen")
+            PlaceholderScreen(title = "Dashboard — Sprint 4")
         }
-        
+
         composable(Screen.TaskList.route) {
-            PlaceholderScreen(title = "Task List Screen")
+            PlaceholderScreen(title = "Daftar Tugas — Sprint 3")
         }
-        
+
         composable(Screen.Calendar.route) {
-            PlaceholderScreen(title = "Calendar Screen")
+            PlaceholderScreen(title = "Kalender — Sprint 5")
         }
-        
+
         composable(Screen.Analytics.route) {
-            PlaceholderScreen(title = "Analytics Screen")
-        }
-        
-        composable(Screen.Auth.route) {
-            PlaceholderScreen(title = "Authentication Screen")
+            PlaceholderScreen(title = "Analitik — Sprint 6")
         }
     }
 }
 
-// Temporary placeholder for features that will be built in subsequent sprints
 @Composable
 fun PlaceholderScreen(title: String) {
     Box(
