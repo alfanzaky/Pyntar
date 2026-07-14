@@ -2,10 +2,9 @@ package com.alfanro.pyntar.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.alfanro.pyntar.core.database.entity.ProductivityLogEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -14,8 +13,11 @@ interface ProductivityLogDao {
     @Query("SELECT * FROM productivity_logs WHERE userId = :userId ORDER BY date DESC")
     fun getLogsByUser(userId: String): Flow<List<ProductivityLogEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertLog(log: ProductivityLogEntity)
+    @Query("SELECT * FROM productivity_logs WHERE userId = :userId AND date = :date LIMIT 1")
+    suspend fun getLogByUserAndDate(userId: String, date: Long): ProductivityLogEntity?
+
+    @Upsert
+    suspend fun upsertLog(log: ProductivityLogEntity)
 
     @Update
     suspend fun updateLog(log: ProductivityLogEntity)

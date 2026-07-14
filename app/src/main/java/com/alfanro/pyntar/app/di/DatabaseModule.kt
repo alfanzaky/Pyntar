@@ -26,7 +26,7 @@ object DatabaseModule {
             PyntarDatabase::class.java,
             "pyntar_db"
         )
-        .fallbackToDestructiveMigration()
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
     }
 

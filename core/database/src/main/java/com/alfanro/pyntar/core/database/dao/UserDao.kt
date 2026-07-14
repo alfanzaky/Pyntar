@@ -15,7 +15,7 @@ interface UserDao {
     fun getUserById(userId: String): Flow<UserEntity?>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertUser(user: UserEntity)
+    suspend fun insertUser(user: UserEntity): Long
 
     @Update
     suspend fun updateUser(user: UserEntity)
