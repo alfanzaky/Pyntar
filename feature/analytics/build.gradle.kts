@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.alfanro.pyntar.feature.analytics"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
