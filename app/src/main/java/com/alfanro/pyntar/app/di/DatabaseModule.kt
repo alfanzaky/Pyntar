@@ -26,7 +26,7 @@ object DatabaseModule {
             PyntarDatabase::class.java,
             "pyntar_db"
         )
-        .fallbackToDestructiveMigration() // Appropriate for early stage development
+        .fallbackToDestructiveMigration(dropAllTables = true) // Appropriate for early stage development
         .build()
     }
 
@@ -37,4 +37,12 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideCategoryDao(database: PyntarDatabase): CategoryDao = database.categoryDao()
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: PyntarDatabase): com.alfanro.pyntar.core.database.dao.UserDao = database.userDao()
+
+    @Provides
+    @Singleton
+    fun provideProductivityLogDao(database: PyntarDatabase): com.alfanro.pyntar.core.database.dao.ProductivityLogDao = database.productivityLogDao()
 }

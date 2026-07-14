@@ -22,4 +22,6 @@ import com.alfanro.pyntar.core.database.entity.UserEntity
 abstract class PyntarDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun categoryDao(): CategoryDao
+    abstract fun userDao(): com.alfanro.pyntar.core.database.dao.UserDao
+    abstract fun productivityLogDao(): com.alfanro.pyntar.core.database.dao.ProductivityLogDao
 }
