@@ -18,7 +18,7 @@ interface CategoryDao {
     suspend fun getCategoryById(categoryId: String): CategoryEntity?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCategory(category: CategoryEntity)
+    suspend fun insertCategory(category: CategoryEntity): Long
 
     @Update
     suspend fun updateCategory(category: CategoryEntity)

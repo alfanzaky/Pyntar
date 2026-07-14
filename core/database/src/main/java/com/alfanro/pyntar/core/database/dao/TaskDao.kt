@@ -21,7 +21,7 @@ interface TaskDao {
     suspend fun getTaskById(taskId: String): TaskEntity?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTask(task: TaskEntity)
+    suspend fun insertTask(task: TaskEntity): Long
 
     @Update
     suspend fun updateTask(task: TaskEntity)
