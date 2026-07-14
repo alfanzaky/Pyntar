@@ -14,7 +14,7 @@ interface ProductivityLogDao {
     @Query("SELECT * FROM productivity_logs WHERE userId = :userId ORDER BY date DESC")
     fun getLogsByUser(userId: String): Flow<List<ProductivityLogEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLog(log: ProductivityLogEntity)
 
     @Update
