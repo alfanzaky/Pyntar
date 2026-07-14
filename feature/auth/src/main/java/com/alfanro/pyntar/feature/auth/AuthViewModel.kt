@@ -53,7 +53,14 @@ class AuthViewModel @Inject constructor(
             _uiState.update {
                 result.fold(
                     onSuccess = { AuthUiState.Success(it) },
-                    onFailure = { AuthUiState.Error(it.message ?: "Terjadi kesalahan") }
+                    onFailure = {
+                        val msg = when (it) {
+                            is LoginUseCase.ValidationError.EmailBlank -> "Email tidak boleh kosong"
+                            is LoginUseCase.ValidationError.PasswordBlank -> "Password tidak boleh kosong"
+                            else -> it.message ?: "Terjadi kesalahan"
+                        }
+                        AuthUiState.Error(msg)
+                    }
                 )
             }
         }
