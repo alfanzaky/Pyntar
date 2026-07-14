@@ -25,11 +25,14 @@ class RegisterUseCase @Inject constructor(
     }
 
     suspend operator fun invoke(params: Params): Result<User> {
+        val trimmedUsername = params.username.trim()
+        val trimmedEmail = params.email.trim().lowercase()
+
         // Validate
-        if (params.username.isBlank()) return Result.failure(ValidationError.UsernameBlank)
-        if (params.username.length < 3) return Result.failure(ValidationError.UsernameTooShort)
-        if (params.email.isBlank()) return Result.failure(ValidationError.EmailBlank)
-        if (!"^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}\$".toRegex().matches(params.email)) {
+        if (trimmedUsername.isBlank()) return Result.failure(ValidationError.UsernameBlank)
+        if (trimmedUsername.length < 3) return Result.failure(ValidationError.UsernameTooShort)
+        if (trimmedEmail.isBlank()) return Result.failure(ValidationError.EmailBlank)
+        if (!"^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}\$".toRegex().matches(trimmedEmail)) {
             return Result.failure(ValidationError.EmailInvalid)
         }
         if (params.password.isBlank()) return Result.failure(ValidationError.PasswordBlank)
@@ -39,8 +42,8 @@ class RegisterUseCase @Inject constructor(
         }
 
         return authRepository.register(
-            username = params.username.trim(),
-            email = params.email.trim().lowercase(),
+            username = trimmedUsername,
+            email = trimmedEmail,
             password = params.password
         )
     }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,6 +23,12 @@ sealed class AuthUiState {
     object Loading : AuthUiState()
     data class Success(val user: User) : AuthUiState()
     data class Error(val message: String) : AuthUiState()
+}
+
+sealed class SessionState {
+    object Loading : SessionState()
+    data class Active(val user: User) : SessionState()
+    object None : SessionState()
 }
 
 @HiltViewModel
@@ -35,8 +42,9 @@ class AuthViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    val currentUser: StateFlow<User?> = getCurrentUserUseCase()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    val sessionState: StateFlow<SessionState> = getCurrentUserUseCase()
+        .map { if (it == null) SessionState.None else SessionState.Active(it) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SessionState.Loading)
 
     fun login(email: String, password: String) {
         viewModelScope.launch {

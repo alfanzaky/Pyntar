@@ -7,10 +7,12 @@ import com.alfanro.pyntar.core.datastore.SessionDataStore
 import com.alfanro.pyntar.data.mapper.toDomain
 import com.alfanro.pyntar.domain.model.User
 import com.alfanro.pyntar.domain.repository.AuthRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,11 +38,15 @@ class AuthRepositoryImpl @Inject constructor(
             return Result.failure(Exception("Username sudah dipakai"))
         }
 
+        val hashedPassword = withContext(Dispatchers.IO) {
+            passwordHasher.hash(password)
+        }
+
         val entity = UserEntity(
             id = UUID.randomUUID().toString(),
             username = username,
             email = email,
-            passwordHash = passwordHasher.hash(password)
+            passwordHash = hashedPassword
         )
 
         val rowId = userDao.insertUser(entity)
@@ -56,7 +62,9 @@ class AuthRepositoryImpl @Inject constructor(
         val entity = userDao.getUserByEmail(email)
             ?: return Result.failure(Exception("Email atau password salah"))
 
-        val isValid = passwordHasher.verify(password, entity.passwordHash)
+        val isValid = withContext(Dispatchers.IO) {
+            passwordHasher.verify(password, entity.passwordHash)
+        }
         return if (isValid) {
             sessionDataStore.saveUserId(entity.id)
             Result.success(entity.toDomain())

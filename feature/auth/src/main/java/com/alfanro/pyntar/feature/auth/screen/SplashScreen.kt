@@ -38,7 +38,7 @@ fun SplashScreen(
     onNavigateToDashboard: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    val currentUser by viewModel.currentUser.collectAsState()
+    val sessionState by viewModel.sessionState.collectAsState()
     var isAnimated by remember { mutableStateOf(false) }
     var sessionChecked by remember { mutableStateOf(false) }
 
@@ -60,9 +60,9 @@ fun SplashScreen(
         sessionChecked = true
     }
 
-    LaunchedEffect(sessionChecked, currentUser) {
-        if (sessionChecked) {
-            if (currentUser != null) {
+    LaunchedEffect(sessionChecked, sessionState) {
+        if (sessionChecked && sessionState !is com.alfanro.pyntar.feature.auth.SessionState.Loading) {
+            if (sessionState is com.alfanro.pyntar.feature.auth.SessionState.Active) {
                 onNavigateToDashboard()
             } else {
                 onNavigateToLogin()
