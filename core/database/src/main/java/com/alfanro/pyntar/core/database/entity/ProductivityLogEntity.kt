@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(
     tableName = "productivity_logs",
@@ -23,11 +22,16 @@ import java.util.UUID
 )
 data class ProductivityLogEntity(
     @PrimaryKey
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,               // deterministic: "$userId-$date"
     val userId: String,
-    val date: Long, // Use Long for timestamp/date
+    val date: Long,               // epoch milliseconds (start of day)
     val completedTasks: Int = 0,
     val lateTasks: Int = 0,
     val score: Int = 0,
     val createdAt: Long = System.currentTimeMillis()
-)
+) {
+    companion object {
+        /** Build a stable PK so that @Upsert can correctly match on primary key. */
+        fun createId(userId: String, date: Long): String = "$userId-$date"
+    }
+}
