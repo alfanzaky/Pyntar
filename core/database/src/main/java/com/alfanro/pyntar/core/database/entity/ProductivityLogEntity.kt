@@ -10,20 +10,21 @@ import java.util.UUID
     tableName = "productivity_logs",
     foreignKeys = [
         ForeignKey(
-            entity = TaskEntity::class,
+            entity = UserEntity::class,
             parentColumns = ["id"],
-            childColumns = ["taskId"],
-            // When a task is deleted, its productivity logs should also be deleted
+            childColumns = ["userId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["taskId"])]
+    indices = [Index(value = ["userId"])]
 )
 data class ProductivityLogEntity(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val taskId: String,
-    val durationMinutes: Int,
-    val note: String? = null,
-    val loggedAt: Long = System.currentTimeMillis()
+    val userId: String,
+    val date: Long, // Use Long for timestamp/date
+    val completedTasks: Int = 0,
+    val lateTasks: Int = 0,
+    val score: Int = 0,
+    val createdAt: Long = System.currentTimeMillis()
 )
