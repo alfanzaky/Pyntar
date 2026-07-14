@@ -271,8 +271,9 @@ fun RegisterScreen(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
                             unfocusedBorderColor = MaterialTheme.colorScheme.outline
                         ),
-                        isError = errorMessage?.contains("Password") == true ||
-                                errorMessage?.contains("password") == true
+                        isError = errorMessage?.let { 
+                            it.contains("password", ignoreCase = true) && !it.contains("Konfirmasi", ignoreCase = true)
+                        } == true
                     )
 
                     // Confirm Password
