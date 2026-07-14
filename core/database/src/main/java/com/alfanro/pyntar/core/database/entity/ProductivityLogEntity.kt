@@ -16,7 +16,10 @@ import java.util.UUID
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["userId"])]
+    indices = [
+        Index(value = ["userId"]),
+        Index(value = ["userId", "date"], unique = true)
+    ]
 )
 data class ProductivityLogEntity(
     @PrimaryKey
